@@ -1,164 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Arthur Game - Simple Block World</title>
-    <style>
-        body { margin: 0; overflow: hidden; font-family: Arial, sans-serif; }
-        #info { position: absolute; top: 10px; left: 10px; color: white; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px; }
-        #instructions { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: white; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px; }
-    </style>
+<meta charset="UTF-8">
+<title>Arthur Game</title>
+<style>body{margin:0;overflow:hidden;}#info{position:absolute;top:10px;left:10px;color:white;background:rgba(0,0,0,0.5);padding:10px;border-radius:5px;}#inst{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:white;background:rgba(0,0,0,0.5);padding:10px;border-radius:5px;}</style>
 </head>
 <body>
 <div id="info">WASD: Move | Mouse: Look</div>
-<div id="instructions">Click to start pointer lock</div>
-<script src="https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.min.js"></script>
+<div id="inst">Click to start</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-    // Basic FPS controls
-    let camera, scene, renderer;
-    let controls = {
-        moveForward: false,
-        moveBackward: false,
-        moveLeft: false,
-        moveRight: false
-    };
-    let velocity = new THREE.Vector3();
-    let direction = new THREE.Vector3();
-    let clock = new THREE.Clock();
-    const CANVAS_WIDTH = window.innerWidth;
-    const CANVAS_HEIGHT = window.innerHeight;
-
-    init();
-    animate();
-
-    function init() {
-        // Scene
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x87ceeb); // sky blue
-
-        // Camera
-        camera = new THREE.PerspectiveCamera(75, CANVAS_WIDTH / CANVAS_HEIGHT, 0.1, 1000);
-        camera.position.set(0, 2, 5);
-
-        // Renderer
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
-        document.body.appendChild(renderer.domElement);
-
-        // Light
-        const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
-        scene.add(light);
-
-        // Ground
-        const groundGeometry = new THREE.PlaneGeometry(200, 200);
-        const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x228B22 });
-        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-        ground.rotation.x = -Math.PI / 2;
-        scene.add(ground);
-
-        // Some blocks
-        const blockGeometry = new THREE.BoxGeometry(1, 1, 1);
-        const blockMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700 });
-        for (let i = 0; i < 20; i++) {
-            const block = new THREE.Mesh(blockGeometry, blockMaterial);
-            block.position.set(
-                (Math.random() - 0.5) * 40,
-                0.5,
-                (Math.random() - 0.5) * 40
-            );
-            scene.add(block);
-        }
-
-        // Event listeners for movement
-        document.addEventListener('keydown', onKeyDown);
-        document.addEventListener('keyup', onKeyUp);
-        document.addEventListener('click', onClick);
-    }
-
-    function onKeyDown(event) {
-        switch (event.code) {
-            case 'KeyW': controls.moveForward = true; break;
-            case 'KeyS': controls.moveBackward = true; break;
-            case 'KeyA': controls.moveLeft = true; break;
-            case 'KeyD': controls.moveRight = true; break;
-        }
-    }
-
-    function onKeyUp(event) {
-        switch (event.code) {
-            case 'KeyW': controls.moveForward = false; break;
-            case 'KeyS': controls.moveBackward = false; break;
-            case 'KeyA': controls.moveLeft = false; break;
-            case 'KeyD': controls.moveRight = false; break;
-        }
-    }
-
-    function onClick() {
-        renderer.domElement.requestPointerLock();
-    }
-
-    // Pointer lock controls
-    let pointerLocked = false;
-    document.addEventListener('pointerlockchange', function () {
-        pointerLocked = document.pointerLockElement === renderer.domElement;
-        document.getElementById('instructions').style.display = pointerLocked ? 'none' : 'block';
-    });
-    document.addEventListener('pointerlockerror', function () {
-        console.error('Pointer lock failed');
-    });
-
-    function animate() {
-        requestAnimationFrame(animate);
-        const delta = clock.getDelta();
-
-        // Move camera
-        const moveDistance = 5 * delta; // 5 units per second
-        if (controls.moveForward) velocity.z -= moveDistance;
-        if (controls.moveBackward) velocity.z += moveDistance;
-        if (controls.moveLeft) velocity.x -= moveDistance;
-        if (controls.moveRight) velocity.x += moveDistance;
-
-        velocity.x *= Math.exp(-4 * delta);
-        velocity.y *= Math.exp(-4 * delta);
-        velocity.z *= Math.exp(-4 * delta);
-
-        direction.z = Number(controls.moveForward) - Number(controls.moveBackward);
-        direction.x = Number(controls.moveLeft) - Number(controls.moveRight);
-        direction.normalize(); // ensures consistent movement in any direction
-
-        if (pointerLocked) {
-            // Apply movement in direction camera is facing
-            const euler = new THREE.Euler(0, 0, 0, 'YXZ');
-            const quat = new THREE.Quaternion().setFromEuler(euler);
-            // camera rotation is handled via pointerlock movement later
-            // Actually we need to get rotation from mouse movement
-            // We'll handle mouse movement separately
-        }
-
-        // Update position
-        camera.position.addScaledVector(direction, moveDistance * (controls.moveForward || controls.moveBackward || controls.moveLeft || controls.moveRight ? 1 : 0));
-        // Actually above is simplified; we need proper movement based on camera rotation.
-        // Let's implement simple FPS with mouse look.
-
-        // We'll add mouse look handler below.
-        renderer.render(scene, camera);
-    }
-
-    // Mouse look
-    let prevTime = performance.now();
-    let yaw = 0, pitch = 0;
-    const PI_2 = Math.PI / 2;
-
-    function onMouseMove(event) {
-        if (!pointerLocked) return;
-        const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-        const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
-        yaw   -= movementX * 0.002;
-        pitch -= movementY * 0.002;
-        pitch = Math.max(-PI_2, Math.min(PI_2, pitch));
-        camera.rotation.set(pitch, yaw, 0);
-    }
-    document.addEventListener('mousemove', onMouseMove);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x87ceeb);
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+camera.position.set(0,2,5);camera.rotation.order='YXZ';
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth,innerHeight);document.body.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xffffbb,0x080820,1));
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x228B22}));
+ground.rotation.x=-Math.PI/2;scene.add(ground);
+const colors=[0xff4444,0x44ff44,0x4444ff,0xffff44,0xff44ff,0x44ffff];
+for(let i=0;i<30;i++){const m=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshStandardMaterial({color:colors[i%6]}));m.position.set((Math.random()-.5)*40,.5,(Math.random()-.5)*40);scene.add(m);}
+const keys={};let yaw=0,pitch=0,locked=false;
+document.addEventListener('keydown',e=>keys[e.code]=true);
+document.addEventListener('keyup',e=>keys[e.code]=false);
+document.addEventListener('click',()=>renderer.domElement.requestPointerLock());
+document.addEventListener('pointerlockchange',()=>{locked=document.pointerLockElement===renderer.domElement;document.getElementById('inst').style.display=locked?'none':'block';});
+document.addEventListener('mousemove',e=>{if(!locked)return;yaw-=e.movementX*.002;pitch=Math.max(-1.5,Math.min(1.5,pitch-e.movementY*.002));});
+const clock=new THREE.Clock();
+(function animate(){requestAnimationFrame(animate);const d=clock.getDelta();
+if(locked){const f=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));const r=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
+if(keys.KeyW)camera.position.addScaledVector(f,5*d);if(keys.KeyS)camera.position.addScaledVector(f,-5*d);
+if(keys.KeyA)camera.position.addScaledVector(r,-5*d);if(keys.KeyD)camera.position.addScaledVector(r,5*d);}
+camera.rotation.set(pitch,yaw,0);renderer.render(scene,camera);})();
 </script>
 </body>
 </html>
