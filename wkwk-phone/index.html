@@ -1,124 +1,15 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>wkwkphone — Online Store</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wkwkphone</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="container nav-container">
-      <a href="#" class="logo">📱 wkwkphone</a>
-      <div class="nav-links">
-        <a href="#products">Produk</a>
-        <a href="#about">Tentang</a>
-        <a href="#contact">Kontak</a>
-      </div>
-      <button class="cart-btn" id="cartBtn" onclick="toggleCart()">
-        🛒 <span id="cartCount">0</span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <section class="hero" id="home">
-    <div class="container hero-content">
-      <h1>HP Keren<br><span class="gradient-text">Harga Merakyat</span></h1>
-      <p>Dapatkan smartphone berkualitas tinggi dengan harga terbaik. Promo spesial bulan ini!</p>
-      <a href="#products" class="btn-primary">Lihat Produk →</a>
-    </div>
-  </section>
-
-  <!-- Products -->
-  <section class="products" id="products">
-    <div class="container">
-      <div class="section-title">
-        <h2>Koleksi <span class="gradient-text">wkwkphone</span></h2>
-        <p>Pilih HP impian kamu hari ini!</p>
-      </div>
-      <div class="product-grid" id="productGrid">
-        <!-- Rendered by JS -->
-      </div>
-    </div>
-  </section>
-
-  <!-- About -->
-  <section class="about" id="about">
-    <div class="container">
-      <div class="about-grid">
-        <div class="about-text">
-          <h2>Kenapa <span class="gradient-text">wkwkphone</span>?</h2>
-          <p>wkwkphone adalah brand smartphone lokal yang fokus pada kualitas dan harga terjangkau. Setiap produk melewati quality control ketat sebelum sampai ke tangan kamu.</p>
-          <ul class="benefits">
-            <li>✅ Garansi resmi 1 tahun</li>
-            <li>✅ Original 100%</li>
-            <li>✅ Gratis ongkir se-Indonesia</li>
-            <li>✅ COD tersedia</li>
-            <li>✅ Garansi 30 hari uang kembali</li>
-          </ul>
-        </div>
-        <div class="about-stats">
-          <div class="stat">
-            <span class="stat-num">10.000+</span>
-            <span class="stat-label">Pelanggan Puas</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num">50+</span>
-            <span class="stat-label">Kota Tersebar</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num">⭐ 4.9</span>
-            <span class="stat-label">Rating Toko</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section class="contact" id="contact">
-    <div class="container">
-      <h2>Hubungi <span class="gradient-text">Kami</span></h2>
-      <p>Ada pertanyaan? Chat langsung aja!</p>
-      <div class="contact-buttons">
-        <a href="https://wa.me/628137355599" class="btn-wa" target="_blank">💬 WhatsApp</a>
-        <a href="mailto:hello@wkwkphone.id" class="btn-email">✉️ Email</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Cart Sidebar -->
-  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
-  <div class="cart-sidebar" id="cartSidebar">
-    <div class="cart-header">
-      <h3>🛒 Keranjang</h3>
-      <button class="cart-close" onclick="toggleCart()">✕</button>
-    </div>
-    <div class="cart-items" id="cartItems">
-      <p class="cart-empty">Belum ada barang nih...</p>
-    </div>
-    <div class="cart-footer" id="cartFooter">
-      <div class="cart-total">
-        <span>Total</span>
-        <span id="cartTotal">Rp 0</span>
-      </div>
-      <button class="btn-checkout" onclick="checkout()">Checkout →</button>
-    </div>
-  </div>
-
-  <!-- Toast -->
-  <div class="toast" id="toast"></div>
-
-  <footer class="footer">
-    <div class="container">
-      <p>© 2026 wkwkphone — Online Store. Made with ❤️</p>
-    </div>
-  </footer>
-
-  <script src="js/script.js"></script>
+    <h1>Welcome to wkwkphone</h1>
+    <p>This is the start of the wkwkphone website.</p>
+    <script src="js/script.js"></script>
 </body>
 </html>
+EOF && mkdir -p css js && [ -f README.md ] || echo '# wkwkphone-website\n\nThis is the wkwkphone website project.' > README.md && git add . && git commit -m "Initial commit for wkwkphone project" && git push origin main
